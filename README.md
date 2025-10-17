@@ -1,6 +1,10 @@
 # QA Automation Demo – Playwright
 
 This is a demo project created to showcase end-to-end (E2E) test automation using [Playwright](https://playwright.dev/) with TypeScript.
+## 🎥 Demo Video
+
+[Click here to watch the demo video]
+https://drive.google.com/file/d/1W1dZ9hOe2UV9CsRonF6VvQFpzM3Clo0_/view?usp=drive_link
 
 ## ✅ Tech Stack
 

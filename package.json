@@ -1,21 +1,24 @@
 {
-  "name": "demo",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {},
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "name": "qa-automation-playwright-portfolio",
+  "version": "1.1.0",
+  "private": true,
+  "description": "Playwright TypeScript UI automation plus Express/PostgreSQL API integration tests",
+  "scripts": {
+    "test:ui": "playwright test --config=playwright.config.ts",
+    "test:integration": "playwright test --config=playwright.integration.config.ts",
+    "test:ui:report": "playwright show-report playwright-report",
+    "typecheck": "tsc --noEmit"
+  },
   "devDependencies": {
     "@playwright/test": "^1.56.0",
     "@types/node": "^24.7.0",
     "@types/pg": "^8.23.1",
-    "pg": "^8.23.1"
+    "typescript": "^5.9.3"
   },
   "dependencies": {
-    "@faker-js/faker": "^10.0.0",
+    "@faker-js/faker": "^10.5.0",
     "dotenv": "^18.0.9",
-    "express": "^5.3.0"
+    "express": "^5.3.0",
+    "pg": "^8.23.1"
   }
 }

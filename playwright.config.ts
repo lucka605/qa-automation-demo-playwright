@@ -1,32 +1,24 @@
 import { defineConfig, devices } from '@playwright/test';
 
+// Intentionally excludes local DB tests: run them with playwright.integration.config.ts.
 export default defineConfig({
   testDir: './tests',
-  fullyParallel: true,
+  testMatch: '**/test_case*.spec.ts',
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
-
-  // ✅ 1. reporter
-  reporter: [['html']],
-
-  // ✅ 2.
+  fullyParallel: false, // Shared demo user + public site; avoid concurrent purchases.
+  retries: process.env.CI ? 1 : 0,
+  workers: 1,
+  timeout: 60_000,
+  expect: { timeout: 10_000 },
+  reporter: [['list'], ['html', { open: 'never' }]],
   use: {
-    headless: false,
-    trace: 'on-first-retry',              // ✅ 
-    video: 'retain-on-failure',           // ✅ 
+    baseURL: 'https://automationexercise.com',
+    headless: process.env.HEADED !== '1',
+    actionTimeout: 15_000,
+    navigationTimeout: 30_000,
+    trace: 'on-first-retry',
     screenshot: 'only-on-failure',
-    viewport: { width: 1280, height: 720 },
+    video: 'retain-on-failure',
   },
-
-  // ✅ 3. 
-  projects: [
-    {
-      name: 'chromium',
-      use: {
-        ...devices['Desktop Chrome'],
-        
-      },
-    },
-  ],
+  projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
 });

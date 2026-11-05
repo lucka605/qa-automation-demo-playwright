@@ -1,0 +1,50 @@
+name: API and PostgreSQL Integration Tests
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: qa_user
+          POSTGRES_PASSWORD: ci_test_password_only
+          POSTGRES_DB: qa_testing
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd "pg_isready -U qa_user -d qa_testing"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      CI: 'true'
+      POSTGRES_HOST: 127.0.0.1
+      POSTGRES_PORT: '5433'
+      POSTGRES_USER: qa_user
+      POSTGRES_PASSWORD: ci_test_password_only
+      POSTGRES_DB: qa_testing
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: node scripts/setup-db.cjs
+      - run: npx playwright test --config=playwright.integration.config.ts
+      - name: Upload integration report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-integration-report
+          path: playwright-integration-report/
+          if-no-files-found: ignore
+          retention-days: 14
